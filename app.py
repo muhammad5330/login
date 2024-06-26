@@ -9,10 +9,11 @@ app.secret_key = 'your_secret_key'
 db = mysql.connector.connect(
     host="localhost",  # Corrected host specification
     port=3306,         # Specify the port separately
-    user="root",
-    password="123456",
+    user="b8cd5c22abd5cb",
+    password="c9646ecf",
     database="flask_auth"
 )
+
 cursor = db.cursor(dictionary=True)
 
 @app.route('/')
