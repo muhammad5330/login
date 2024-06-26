@@ -18,7 +18,7 @@ packaging==23.2
 pandas==2.2.0
 php==1.2.1
 python-json-logger==2.0.7
-plotly==5.5.0 
+plotly==5.5.0
 scikit-learn==1.4.1.post1
 scipy==1.12.0
 seaborn==0.13.2
@@ -35,8 +35,3 @@ websocket-client==1.7.0
 Werkzeug==3.0.1
 widgetsnbextension==4.0.10
 WTForms==3.1.2
-Flask==2.1.2
-mysql-connector-python==8.0.31
-Flask-MySQLdb==1.0.0
-PyMySQL==1.0.2
-Flask-SQLAlchemy==2.5.1
