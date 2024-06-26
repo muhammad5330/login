@@ -7,7 +7,7 @@ app.secret_key = 'your_secret_key'
 
 # Database connection
 db = mysql.connector.connect(
-    host="localhost",  # Corrected host specification
+    host="us-cluster-east-01.k8s.cleardb.net",  # Corrected host specification
     port=3306,         # Specify the port separately
     user="b8cd5c22abd5cb",
     password="c9646ecf",
