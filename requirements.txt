@@ -35,3 +35,8 @@ websocket-client==1.7.0
 Werkzeug==3.0.1
 widgetsnbextension==4.0.10
 WTForms==3.1.2
+Flask==2.1.2
+mysql-connector-python==8.0.31
+Flask-MySQLdb==1.0.0
+PyMySQL==1.0.2
+Flask-SQLAlchemy==2.5.1
