@@ -10,7 +10,7 @@ db = mysql.connector.connect(
     host="localhost",  # Corrected host specification
     port=3306,         # Specify the port separately
     user="root",
-    password="123",
+    password="123456",
     database="flask_auth"
 )
 cursor = db.cursor(dictionary=True)
