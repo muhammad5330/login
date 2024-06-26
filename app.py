@@ -14,6 +14,7 @@ db = mysql.connector.connect(
     database="flask_auth"
 )
 
+
 cursor = db.cursor(dictionary=True)
 
 @app.route('/')
