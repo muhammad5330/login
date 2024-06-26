@@ -11,7 +11,7 @@ db = mysql.connector.connect(
     port=3306,         # Specify the port separately
     user="b8cd5c22abd5cb",
     password="c9646ecf",
-    database="flask_auth"
+    database="heroku_06bc75ebcf9d933"
 )
 
 
