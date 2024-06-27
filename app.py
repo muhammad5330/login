@@ -1,21 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# Database connection
-db = mysql.connector.connect(
-    host="us-cluster-east-01.k8s.cleardb.net",  # Corrected host specification
-    port=3306,      # Specify the port separately
-    user="b8cd5c22abd5cb",
-    password="c9646ecf",
-    database="heroku_06bc75ebcf9d933"
-)
-
-
-cursor = db.cursor(dictionary=True)
+# In-memory storage for user credentials
+users = {}
 
 @app.route('/')
 def home():
@@ -29,10 +19,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
-        user = cursor.fetchone()
+        user = users.get(username)
         
-        if user and check_password_hash(user['password'], password):
+        if user and check_password_hash(user, password):
             session['username'] = username
             return redirect(url_for('home'))
         
@@ -47,12 +36,11 @@ def signup():
         password = request.form['password']
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
         
-        try:
-            cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_password))
-            db.commit()
-            return redirect(url_for('login'))
-        except mysql.connector.Error as err:
-            return f"Error: {err}"
+        if username in users:
+            return "Username already exists"
+        
+        users[username] = hashed_password
+        return redirect(url_for('login'))
     
     return render_template('signup.html')
 
