@@ -35,3 +35,5 @@ websocket-client==1.7.0
 Werkzeug==3.0.1
 widgetsnbextension==4.0.10
 WTForms==3.1.2
+mysql-connector-python
+mysqlclient
