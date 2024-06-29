@@ -226,6 +226,155 @@ def save_physics_score():
             return jsonify({"error": str(err)}), 500
     return jsonify({"error": "User not logged in"}), 401
 
+#*********************************LOGICAL**************************************************************
+@app.route('/LogicalQuiz')
+def LOGICAL():
+    return render_template('LogicalQuiz.html')
+
+# API endpoint to get a random set of questions
+@app.route('/LOGICAL_questions', methods=['GET'])
+def LOGICAL_get_questions():
+    random_questions = get_random_questions_chem(CSV_FILE_PATH_logical, 20)
+    return jsonify(random_questions)
+
+# API endpoint to submit an answer and get the next question or score
+@app.route('/submit', methods=['POST'])
+def LOGICAL_submit_answer():
+    data = request.json
+    current_question_index = data['currentQuestionIndex']
+    selected_answer = data['selectedAnswer']
+    
+    questions = get_random_questions_chem(CSV_FILE_PATH_logical, 20)  # Get the same set of random questions
+    is_correct = any(answer['text'] == selected_answer and answer['correct'] for answer in questions[current_question_index]['answers'])
+    
+    if is_correct:
+        response = {"correct": True}
+    else:
+        response = {"correct": False}
+    if current_question_index + 1 < len(questions):
+        next_question = questions[current_question_index + 1]
+        response["nextQuestion"] = next_question
+    else:
+        response["end"] = True
+    return jsonify(response)
+
+#---------------
+@app.route('/save_logical_score', methods=['POST'])
+def save_logical_score():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        data = request.json
+        score = data.get('score')
+        print(f"Saving logical score for user {user_id}: {score}")  # Debug print
+
+        try:
+            # Check if the user already has a record in SubjScore
+            cursor.execute("SELECT * FROM SubjScore WHERE ID=%s", (user_id,))
+            result = cursor.fetchone()
+
+            if result:
+                # Update the existing Physics score
+                cursor.execute(
+                    "UPDATE SubjScore SET Logical=%s WHERE ID=%s",
+                    (score, user_id)
+                )
+            else:
+                # Insert a new record with the Physics score
+                cursor.execute(
+                    "INSERT INTO SubjScore (ID, Logical) VALUES (%s, %s)",
+                    (user_id, score)
+                )
+
+            # Update the Total field to sum all subjects for the user
+            cursor.execute(
+                "UPDATE SubjScore SET Total =COALESCE(Logical, 0) + COALESCE(English, 0) + COALESCE(Physics, 0) + COALESCE(Biology, 0) + COALESCE(Chemistry, 0) WHERE ID=%s",
+                (user_id,)
+            )
+
+            db.commit()
+            return jsonify({"message": "Physics score saved successfully"})
+        except mysql.connector.Error as err:
+            print(f"Database error: {err}")  # Debug print
+            return jsonify({"error": str(err)}), 500
+    else:
+        print("User not logged in")  # Debug print
+        return jsonify({"error": "User not logged in"}), 401
+
+#******************************************************************************************************
+#*********************************ENGLISH**************************************************************
+# Serve the HTML page
+@app.route('/EnglishQuiz')
+def ENG():
+    return render_template('EnglishQuiz.html')
+
+# API endpoint to get a random set of questions
+@app.route('/ENG_questions', methods=['GET'])
+def ENG_get_questions():
+    random_questions = get_random_questions_chem(CSV_FILE_PATH_eng, 20)
+    return jsonify(random_questions)
+
+# API endpoint to submit an answer and get the next question or score
+@app.route('/submit', methods=['POST'])
+def ENG_submit_answer():
+    data = request.json
+    current_question_index = data['currentQuestionIndex']
+    selected_answer = data['selectedAnswer']
+    
+    questions = get_random_questions_chem(CSV_FILE_PATH_eng, 20)  # Get the same set of random questions
+    is_correct = any(answer['text'] == selected_answer and answer['correct'] for answer in questions[current_question_index]['answers'])
+    
+    if is_correct:
+        response = {"correct": True}
+    else:
+        response = {"correct": False}
+    if current_question_index + 1 < len(questions):
+        next_question = questions[current_question_index + 1]
+        response["nextQuestion"] = next_question
+    else:
+        response["end"] = True
+    return jsonify(response)
+#-------------
+@app.route('/save_english_score', methods=['POST'])
+def save_english_score():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        data = request.json
+        score = data.get('score')
+        print(f"Saving logical score for user {user_id}: {score}")  # Debug print
+
+        try:
+            # Check if the user already has a record in SubjScore
+            cursor.execute("SELECT * FROM SubjScore WHERE ID=%s", (user_id,))
+            result = cursor.fetchone()
+
+            if result:
+                # Update the existing Physics score
+                cursor.execute(
+                    "UPDATE SubjScore SET English=%s WHERE ID=%s",
+                    (score, user_id)
+                )
+            else:
+                # Insert a new record with the Physics score
+                cursor.execute(
+                    "INSERT INTO SubjScore (ID, English) VALUES (%s, %s)",
+                    (user_id, score)
+                )
+
+            # Update the Total field to sum all subjects for the user
+            cursor.execute(
+                "UPDATE SubjScore SET Total =COALESCE(Logical, 0) + COALESCE(English, 0) + COALESCE(Physics, 0) + COALESCE(Biology, 0) + COALESCE(Chemistry, 0) WHERE ID=%s",
+                (user_id,)
+            )
+
+            db.commit()
+            return jsonify({"message": "Physics score saved successfully"})
+        except mysql.connector.Error as err:
+            print(f"Database error: {err}")  # Debug print
+            return jsonify({"error": str(err)}), 500
+    else:
+        print("User not logged in")  # Debug print
+        return jsonify({"error": "User not logged in"}), 401
+
 #*********************************MOCK EXAM************************************************************
 # Function to insert quiz result into database
 def insert_quiz_result(total_score):
