@@ -23,11 +23,11 @@ CSV_FILE_PATH_phy = 'physics.csv'
 
 # Database connection
 db = mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="123",
-    database="E"
+    host="us-cluster-east-01.k8s.cleardb.net",
+    # port=3306,
+    user="b8cd5c22abd5cb",
+    password="c9646ecf",
+    database="heroku_06bc75ebcf9d933"
 )
 cursor = db.cursor(dictionary=True)
 
